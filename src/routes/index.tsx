@@ -1,5 +1,5 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { NotFound } from "../pages";
+import { NotFound, StandardVigenerePage } from "../pages";
 import { Navbar, Sidebar } from "@/components";
 
 const PageLayout = () => {
@@ -21,13 +21,11 @@ const routes: RouteObject[] = [
         children: [
             {
                 path: "",
-                element: <NotFound />,
+                element: <StandardVigenerePage />,
             },
             {
                 path: "*",
-                element: (
-                    <NotFound />
-                ),
+                element: <NotFound />,
             },
         ],
     },
