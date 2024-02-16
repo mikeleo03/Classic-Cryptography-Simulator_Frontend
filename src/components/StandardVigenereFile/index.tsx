@@ -7,13 +7,12 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { FileProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import UploadImage from "@/assets/images/upload.png";
 
 const FormSchema = z.object({
-    input: z.string().min(1, {
-        message: "Plain text is required and cannot be empty.",
-    }),
+    input: z.any(),
     key: z.string().min(1, {
         message: "Key is required and cannot be empty.",
     }),
@@ -22,41 +21,44 @@ const FormSchema = z.object({
 
 const StandardVigenereFile: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
-    const [result, setResult] = useState<string>();
+    const [result, setResult] = useState("");
+    const [messageData, setMessageData] = useState<string>("");
+    const [fileType, setFileType] = useState<string>("");
+    const [fileName, setFileName] = useState<string>("");
+
     const textRefFakultas = useRef<HTMLParagraphElement>(null);
     const infoRefFakultas = useRef<HTMLParagraphElement>(null);
 
     const showFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-
+    
         if (file) {
-            if (textRefFakultas && textRefFakultas.current) {
-                textRefFakultas.current.textContent = 'File uploaded successfully!';
-            }
-            if (infoRefFakultas && infoRefFakultas.current) {
-                infoRefFakultas.current.textContent = `${file.name}`;
-            }
-
-            /* const reader = new FileReader();
-
-            reader.onload = (event) => {
-                try {
-                    setJsonData(JSON.parse(event.target?.result as string));
-                } catch (error) {
-                    toast.error("File yang Anda unggah mungkin kosong, silakan periksa kembali", {
-                        position: toast.POSITION.TOP_RIGHT
-                    });
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (e.target) {
+                    const res = e.target.result as string;
+                    setMessageData(res); // Update messageData with file content
+                    setFileType(file.type);
+                    setFileName(file.name);
                 }
             };
-
-            reader.readAsText(file); */
+            reader.readAsText(file);
+    
+            if (textRefFakultas.current) {
+                textRefFakultas.current.textContent = 'File uploaded successfully!';
+            }
+            if (infoRefFakultas.current) {
+                infoRefFakultas.current.textContent = `${file.name}`;
+            }
+        } else {
+            setMessageData(""); // Reset messageData if no file is selected
         }
-    };
+    };    
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            input: "",
+            input: null as any,
             key: "",
             encrypt: true,
         },
@@ -65,7 +67,7 @@ const StandardVigenereFile: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: data.input,
+                input: messageData,
                 key: data.key,
                 encrypt: data.encrypt
             };
@@ -77,10 +79,24 @@ const StandardVigenereFile: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
+            setResult(messageData);
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
+        }
+    }
+
+    const handleDownload = () => {
+        if (fileType !== "") {
+            const blob = new Blob([result], { type: fileType });
+            const file = new File([blob], fileName, { type: fileType });
+      
+            FileProcessor.downloadFile(file, fileName);
+        } else {
+            if (!FileProcessor.download(result, "cipher-result.txt")) {
+                alert("Download failed");
+            }
         }
     }
 
@@ -117,7 +133,7 @@ const StandardVigenereFile: React.FC = () => {
                     <FormField
                         control={form.control}
                         name="input"
-                        render={({ field }) => (
+                        render={() => (
                             <FormItem>
                                 <FormLabel className="text-xl font-bold mb-1">
                                     <div className="border-2 border-dashed border-white-3 rounded-lg p-4 py-2.5 w-full items-center cursor-pointer bg-primaryYellow hover:bg-secondaryYellow duration-200 flex flex-col">
@@ -139,7 +155,7 @@ const StandardVigenereFile: React.FC = () => {
                                     </div>
                                 </FormLabel>
                                 <FormControl>
-                                    <Input type="file" {...field} onChange={showFile} className="hidden"/>
+                                    <Input type="file" onChange={showFile} className="hidden"/>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -174,7 +190,7 @@ const StandardVigenereFile: React.FC = () => {
                 <div className="flex items-center justify-between">
                     <div className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-xl font-bold mb-1">Result</div>
                     {result && <div className="flex items-center space-x-5">
-                        <Button className="md:text-sm text-base flex justify-center space-x-2">
+                        <Button className="md:text-sm text-base flex justify-center space-x-2" onClick={handleDownload}>
                             <Download className="h-4 w-4" /> <span>Download</span>
                         </Button>
                     </div>}

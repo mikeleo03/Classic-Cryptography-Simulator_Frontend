@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { FileProcessor } from '@/utils';
 import { toast } from "react-toastify";
 
 const FormSchema = z.object({
@@ -22,7 +23,7 @@ const FormSchema = z.object({
 
 const StandardVigenereText: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
-    const [result, setResult] = useState<string>();
+    const [result, setResult] = useState<string>("");
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -48,10 +49,17 @@ const StandardVigenereText: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
+            setResult(data.input);
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
+        }
+    }
+
+    const handleDownload = () => {
+        if (!FileProcessor.download(result, "standard-vigenere-result.txt")) {
+            alert("Download failed");
         }
     }
 
@@ -131,7 +139,7 @@ const StandardVigenereText: React.FC = () => {
                 <div className="flex items-center justify-between">
                     <div className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-xl font-bold mb-1">Result</div>
                     {result && <div className="flex items-center space-x-5">
-                        <Button className="md:text-sm text-base flex justify-center space-x-2">
+                        <Button className="md:text-sm text-base flex justify-center space-x-2" onClick={handleDownload}>
                             <Download className="h-4 w-4" /> <span>Download</span>
                         </Button>
                     </div>}
