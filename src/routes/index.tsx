@@ -1,5 +1,5 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { NotFound, StandardVigenerePage } from "../pages";
+import { NotFound, StandardVigenerePage, AutoKeyVigenerePage, ExtendedVigenerePage } from "../pages";
 import { Navbar, Sidebar } from "@/components";
 
 const PageLayout = () => {
@@ -22,6 +22,14 @@ const routes: RouteObject[] = [
             {
                 path: "",
                 element: <StandardVigenerePage />,
+            },
+            {
+                path: "/auto-key-vigenere",
+                element: <AutoKeyVigenerePage />,
+            },
+            {
+                path: "/extended-vigenere",
+                element: <ExtendedVigenerePage />,
             },
             {
                 path: "*",

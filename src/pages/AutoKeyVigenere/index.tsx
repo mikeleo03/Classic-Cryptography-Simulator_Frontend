@@ -5,16 +5,16 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { StandardVigenereText, StandardVigenereFile } from "@/components";
+import { AutoKeyVigenereText, AutoKeyVigenereFile } from "@/components";
 
-const StandardVigenerePage: React.FC = () => {
+const AutoKeyVigenerePage: React.FC = () => {
 
     return (
         <div className="relative h-screen w-full overflow-y-auto overflow-x-hidden md:px-7 px-6">
             {/* Title section */}
             <div className="z-200 relative">
-                <h1 className="text-3xl font-bold mb-1">Standard Vigènere Cipher</h1>
-                <h3 className="text-lg mb-5">Polyalpabetic substitution cipher based on vigènere square.</h3>
+                <h1 className="text-3xl font-bold mb-1">Auto-Key Vigènere Cipher</h1>
+                <h3 className="text-lg mb-5">Short key teams up with the plaintext for added strength.</h3>
             </div>
             
             {/* Encryption and Decription Section */}
@@ -29,10 +29,10 @@ const StandardVigenerePage: React.FC = () => {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="text" className="w-full">
-                        <StandardVigenereText />
+                        <AutoKeyVigenereText />
                     </TabsContent>
                     <TabsContent value="file">
-                        <StandardVigenereFile />
+                        <AutoKeyVigenereFile />
                     </TabsContent>
                 </Tabs>
             </div>
@@ -40,4 +40,4 @@ const StandardVigenerePage: React.FC = () => {
     );
 };
 
-export default StandardVigenerePage;
+export default AutoKeyVigenerePage;
