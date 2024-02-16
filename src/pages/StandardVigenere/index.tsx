@@ -1,11 +1,11 @@
-import React /* { useState, useEffect } */ from "react";
-/* import { toast } from "react-toastify"; */
+import React from "react";
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@/components/ui/tabs"
+} from "@/components/ui/tabs";
+import { StandardVigenereText } from "@/components";
 
 const StandardVigenerePage: React.FC = () => {
 
@@ -20,16 +20,16 @@ const StandardVigenerePage: React.FC = () => {
             {/* Encryption and Decription Section */}
             <div className="w-full mt-6 mb-8">
                 <Tabs defaultValue="text" className="w-full mb-10">
-                    <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="text">
+                    <TabsList className="grid w-full grid-cols-2 h-full">
+                        <TabsTrigger value="text" className="text-base">
                             Plain Text
                         </TabsTrigger>
-                        <TabsTrigger value="file">
+                        <TabsTrigger value="file" className="text-base">
                             File Upload
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="text">
-                        ini text
+                        <StandardVigenereText />
                     </TabsContent>
                     <TabsContent value="file">
                         ini file
