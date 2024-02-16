@@ -5,7 +5,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs";
-import { StandardVigenereText } from "@/components";
+import { StandardVigenereText, StandardVigenereFile } from "@/components";
 
 const StandardVigenerePage: React.FC = () => {
 
@@ -32,7 +32,7 @@ const StandardVigenerePage: React.FC = () => {
                         <StandardVigenereText />
                     </TabsContent>
                     <TabsContent value="file">
-                        ini file
+                        <StandardVigenereFile />
                     </TabsContent>
                 </Tabs>
             </div>
