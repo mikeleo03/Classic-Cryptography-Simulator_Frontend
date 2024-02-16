@@ -12,6 +12,8 @@ import AffineText from "./AffineText";
 import AffineFile from "./AffineFile";
 import HillText from "./HillText";
 import HillFile from "./HillFile";
+import SuperEncryptionText from "./SuperEncryptionText";
+import SuperEncryptionFile from "./SuperEncryptionFile";
 
 export { 
     Sidebar, 
@@ -27,5 +29,7 @@ export {
     AffineText,
     AffineFile,
     HillText,
-    HillFile
+    HillFile,
+    SuperEncryptionText,
+    SuperEncryptionFile,
 };
