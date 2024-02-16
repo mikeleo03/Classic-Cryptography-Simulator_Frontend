@@ -5,7 +5,8 @@ import {
     AutoKeyVigenerePage, 
     ExtendedVigenerePage, 
     PlayfairPage,
-    AffinePage 
+    AffinePage ,
+    HillPage
 } from "../pages";
 import { Navbar, Sidebar } from "@/components";
 
@@ -45,6 +46,10 @@ const routes: RouteObject[] = [
             {
                 path: "/affine",
                 element: <AffinePage />,
+            },
+            {
+                path: "/hill",
+                element: <HillPage />,
             },
             {
                 path: "*",

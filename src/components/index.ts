@@ -10,6 +10,8 @@ import PlayfairText from "./PlayfairText";
 import PlayfairFile from "./PlayfairFile";
 import AffineText from "./AffineText";
 import AffineFile from "./AffineFile";
+import HillText from "./HillText";
+import HillFile from "./HillFile";
 
 export { 
     Sidebar, 
@@ -23,5 +25,7 @@ export {
     PlayfairText,
     PlayfairFile,
     AffineText,
-    AffineFile
+    AffineFile,
+    HillText,
+    HillFile
 };

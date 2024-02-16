@@ -4,6 +4,7 @@ import AutoKeyVigenerePage from "./AutoKeyVigenere";
 import ExtendedVigenerePage from "./ExtendedVigenere";
 import PlayfairPage from "./Playfair";
 import AffinePage from "./Affine";
+import HillPage from "./Hill";
 
 export {
   NotFound,
@@ -11,5 +12,6 @@ export {
   AutoKeyVigenerePage,
   ExtendedVigenerePage,
   PlayfairPage,
-  AffinePage
+  AffinePage,
+  HillPage
 };
