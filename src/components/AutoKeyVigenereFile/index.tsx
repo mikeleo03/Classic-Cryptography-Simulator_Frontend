@@ -94,7 +94,7 @@ const AutoKeyVigenereFile: React.FC = () => {
       
             FileProcessor.downloadFile(file, fileName);
         } else {
-            if (!FileProcessor.download(result, "cipher-result.txt")) {
+            if (!FileProcessor.download(result, "AutoKey-vigenere-result.txt")) {
                 alert("Download failed");
             }
         }

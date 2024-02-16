@@ -58,7 +58,7 @@ const StandardVigenereText: React.FC = () => {
     }
 
     const handleDownload = () => {
-        if (!FileProcessor.download(result, "standard-vigenere-result.txt")) {
+        if (!FileProcessor.download(result, "Standard-vigenere-result.txt")) {
             alert("Download failed");
         }
     }

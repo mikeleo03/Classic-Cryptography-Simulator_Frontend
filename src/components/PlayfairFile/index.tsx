@@ -19,7 +19,7 @@ const FormSchema = z.object({
     encrypt: z.boolean().default(true).optional(),
 });
 
-const ExtendedVigenereFile: React.FC = () => {
+const PlayfairFile: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
     const [result, setResult] = useState("");
     const [messageData, setMessageData] = useState<string>("");
@@ -68,7 +68,7 @@ const ExtendedVigenereFile: React.FC = () => {
         try {
             const payload = {
                 input: TextProcessor.cleanFormat(messageData),
-                key: data.key,
+                keyword: data.key,
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -94,7 +94,7 @@ const ExtendedVigenereFile: React.FC = () => {
       
             FileProcessor.downloadFile(file, fileName);
         } else {
-            if (!FileProcessor.download(result, "Extended-vigenere-result.txt")) {
+            if (!FileProcessor.download(result, "Playfair-result.txt")) {
                 alert("Download failed");
             }
         }
@@ -166,7 +166,7 @@ const ExtendedVigenereFile: React.FC = () => {
                         name="key"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-xl font-bold mb-1">Key</FormLabel>
+                                <FormLabel className="text-xl font-bold mb-1">Playfair Keyword</FormLabel>
                                 <FormControl>
                                     <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
                                 </FormControl>
@@ -206,4 +206,4 @@ const ExtendedVigenereFile: React.FC = () => {
     );
 };
   
-export default ExtendedVigenereFile;
+export default PlayfairFile;

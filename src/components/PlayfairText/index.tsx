@@ -1,64 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Loader2, Download } from "lucide-react";
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
-import UploadImage from "@/assets/images/upload.png";
 
 const FormSchema = z.object({
-    input: z.any(),
+    input: z.string().min(1, {
+        message: "Plain text is required and cannot be empty.",
+    }),
     key: z.string().min(1, {
         message: "Key is required and cannot be empty.",
     }),
     encrypt: z.boolean().default(true).optional(),
 });
 
-const ExtendedVigenereFile: React.FC = () => {
+const PlayfairText: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
-    const [result, setResult] = useState("");
-    const [messageData, setMessageData] = useState<string>("");
-    const [fileType, setFileType] = useState<string>("");
-    const [fileName, setFileName] = useState<string>("");
-
-    const textRefFakultas = useRef<HTMLParagraphElement>(null);
-    const infoRefFakultas = useRef<HTMLParagraphElement>(null);
-
-    const showFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-    
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (e.target) {
-                    const res = e.target.result as string;
-                    setMessageData(res); // Update messageData with file content
-                    setFileType(file.type);
-                    setFileName(file.name);
-                }
-            };
-            reader.readAsText(file);
-    
-            if (textRefFakultas.current) {
-                textRefFakultas.current.textContent = 'File uploaded successfully!';
-            }
-            if (infoRefFakultas.current) {
-                infoRefFakultas.current.textContent = `${file.name}`;
-            }
-        } else {
-            setMessageData(""); // Reset messageData if no file is selected
-        }
-    };    
+    const [result, setResult] = useState<string>("");
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            input: null as any,
+            input: "",
             key: "",
             encrypt: true,
         },
@@ -67,8 +37,8 @@ const ExtendedVigenereFile: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: TextProcessor.cleanFormat(messageData),
-                key: data.key,
+                input: TextProcessor.cleanFormat(data.input),
+                keyword: data.key,
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -79,7 +49,7 @@ const ExtendedVigenereFile: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(TextProcessor.cleanFormat(messageData));
+            setResult(TextProcessor.cleanFormat(data.input));
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -88,25 +58,18 @@ const ExtendedVigenereFile: React.FC = () => {
     }
 
     const handleDownload = () => {
-        if (fileType !== "") {
-            const blob = new Blob([result], { type: fileType });
-            const file = new File([blob], fileName, { type: fileType });
-      
-            FileProcessor.downloadFile(file, fileName);
-        } else {
-            if (!FileProcessor.download(result, "Extended-vigenere-result.txt")) {
-                alert("Download failed");
-            }
+        if (!FileProcessor.download(result, "Playfair-result.txt")) {
+            alert("Download failed");
         }
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col w-full'>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4 mt-5">
                     <div className='flex justify-between items-center'>
                         <div className='flex items-center'>
-                            <h1 className="text-xl font-bold">Input File</h1>
+                            <h1 className="text-xl font-bold">Input Text</h1>
                         </div>
                         <FormField
                             control={form.control}
@@ -133,29 +96,15 @@ const ExtendedVigenereFile: React.FC = () => {
                     <FormField
                         control={form.control}
                         name="input"
-                        render={() => (
+                        render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-xl font-bold mb-1">
-                                    <div className="border-2 border-dashed border-white-3 rounded-lg p-4 py-2.5 w-full items-center cursor-pointer bg-primaryYellow hover:bg-secondaryYellow duration-200 flex flex-col">
-                                        <div className='w-1/5 flex items-center justify-center'>
-                                            <img
-                                                src={UploadImage}
-                                                className="block h-20"
-                                                alt=""
-                                            />
-                                        </div>
-                                        <div className='w-4/5'>
-                                            <p className="text-base font-bold text-center" ref={textRefFakultas}>
-                                                Please upload your input file here...
-                                            </p>
-                                            <p className="text-sm font-normal text-center mt-1" ref={infoRefFakultas}>
-                                                You haven't uploaded any files, yet!
-                                            </p>
-                                        </div>
-                                    </div>
-                                </FormLabel>
+                                <FormLabel className="text-xl font-bold mb-1"></FormLabel>
                                 <FormControl>
-                                    <Input type="file" onChange={showFile} className="hidden"/>
+                                    <Textarea
+                                        placeholder="Place your input text here..."
+                                        className="resize-none h-36"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -166,7 +115,7 @@ const ExtendedVigenereFile: React.FC = () => {
                         name="key"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className="text-xl font-bold mb-1">Key</FormLabel>
+                                <FormLabel className="text-xl font-bold mb-1">Playfair Keyword</FormLabel>
                                 <FormControl>
                                     <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
                                 </FormControl>
@@ -186,7 +135,7 @@ const ExtendedVigenereFile: React.FC = () => {
                     </Button>
                 </form>
             </Form>
-            <div className="space-y-2 mt-10">
+            <div className="space-y-2 mt-10 w-full">
                 <div className="flex items-center justify-between">
                     <div className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-xl font-bold mb-1">Result</div>
                     {result && <div className="flex items-center space-x-5">
@@ -206,4 +155,4 @@ const ExtendedVigenereFile: React.FC = () => {
     );
 };
   
-export default ExtendedVigenereFile;
+export default PlayfairText;

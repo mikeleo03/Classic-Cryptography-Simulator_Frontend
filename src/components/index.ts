@@ -6,6 +6,8 @@ import AutoKeyVigenereText from "./AutoKeyVigenereText";
 import AutoKeyVigenereFile from "./AutoKeyVigenereFile";
 import ExtendedVigenereText from "./ExtendedVigenereText";
 import ExtendedVigenereFile from "./ExtendedVigenereFile";
+import PlayfairText from "./PlayfairText";
+import PlayfairFile from "./PlayfairFile";
 
 export { 
     Sidebar, 
@@ -15,5 +17,7 @@ export {
     AutoKeyVigenereText, 
     AutoKeyVigenereFile,
     ExtendedVigenereText,
-    ExtendedVigenereFile
+    ExtendedVigenereFile,
+    PlayfairText,
+    PlayfairFile
 };
