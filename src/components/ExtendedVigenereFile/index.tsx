@@ -68,7 +68,7 @@ const ExtendedVigenereFile: React.FC = () => {
         try {
             const payload = {
                 input: TextProcessor.cleanFormat(messageData),
-                key: data.key,
+                key: TextProcessor.cleanFormat(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);

@@ -38,7 +38,7 @@ const StandardVigenereText: React.FC = () => {
         try {
             const payload = {
                 input: TextProcessor.cleanFormat(data.input),
-                key: data.key,
+                key: TextProcessor.cleanFormat(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);

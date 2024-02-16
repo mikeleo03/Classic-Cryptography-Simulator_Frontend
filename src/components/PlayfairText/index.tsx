@@ -38,7 +38,7 @@ const PlayfairText: React.FC = () => {
         try {
             const payload = {
                 input: TextProcessor.cleanFormat(data.input),
-                keyword: data.key,
+                keyword: TextProcessor.cleanFormat(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);

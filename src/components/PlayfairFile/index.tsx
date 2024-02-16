@@ -68,7 +68,7 @@ const PlayfairFile: React.FC = () => {
         try {
             const payload = {
                 input: TextProcessor.cleanFormat(messageData),
-                keyword: data.key,
+                keyword: TextProcessor.cleanFormat(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
