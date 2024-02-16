@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { FileProcessor } from '@/utils';
+import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 
 const FormSchema = z.object({
@@ -37,7 +37,7 @@ const StandardVigenereText: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: data.input,
+                input: TextProcessor.cleanFormat(data.input),
                 key: data.key,
                 encrypt: data.encrypt
             };
@@ -49,7 +49,7 @@ const StandardVigenereText: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(data.input);
+            setResult(TextProcessor.cleanFormat(data.input));
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -64,7 +64,7 @@ const StandardVigenereText: React.FC = () => {
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className='flex flex-col w-full'>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-4 mt-5">
                     <div className='flex justify-between items-center'>
@@ -135,7 +135,7 @@ const StandardVigenereText: React.FC = () => {
                     </Button>
                 </form>
             </Form>
-            <div className="space-y-2 mt-10">
+            <div className="space-y-2 mt-10 w-full">
                 <div className="flex items-center justify-between">
                     <div className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-xl font-bold mb-1">Result</div>
                     {result && <div className="flex items-center space-x-5">
@@ -145,7 +145,8 @@ const StandardVigenereText: React.FC = () => {
                     </div>}
                 </div>
                 {result ? 
-                    <div className="flex h-40 overflow-y-auto w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-base pb-10">{result}</div> 
+                    <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
+                    {TextProcessor.toBase64(result)}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

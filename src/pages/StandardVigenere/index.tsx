@@ -28,7 +28,7 @@ const StandardVigenerePage: React.FC = () => {
                             File Upload
                         </TabsTrigger>
                     </TabsList>
-                    <TabsContent value="text">
+                    <TabsContent value="text" className="w-full">
                         <StandardVigenereText />
                     </TabsContent>
                     <TabsContent value="file">

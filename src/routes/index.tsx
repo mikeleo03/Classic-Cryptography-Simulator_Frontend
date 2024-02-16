@@ -6,7 +6,7 @@ const PageLayout = () => {
     return (
         <div className="flex">
             <Sidebar />
-            <main className="bg-background flex flex-col md:w-full w-screen h-screen">
+            <main className="bg-background flex flex-col md:w-full w-4/5 h-screen">
                 <Navbar />
                 <Outlet />
             </main>

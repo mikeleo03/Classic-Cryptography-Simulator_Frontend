@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { FileProcessor } from '@/utils';
+import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import UploadImage from "@/assets/images/upload.png";
 
@@ -67,7 +67,7 @@ const StandardVigenereFile: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: messageData,
+                input: TextProcessor.cleanFormat(messageData),
                 key: data.key,
                 encrypt: data.encrypt
             };
@@ -79,7 +79,7 @@ const StandardVigenereFile: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(messageData);
+            setResult(TextProcessor.cleanFormat(messageData));
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -196,7 +196,8 @@ const StandardVigenereFile: React.FC = () => {
                     </div>}
                 </div>
                 {result ? 
-                    <div className="flex h-40 overflow-y-auto w-full rounded-md border border-input bg-background px-3 py-2 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm text-base pb-10">{result}</div> 
+                    <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
+                    {TextProcessor.toBase64(result)}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
