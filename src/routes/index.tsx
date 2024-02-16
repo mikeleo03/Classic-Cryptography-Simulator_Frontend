@@ -1,5 +1,12 @@
 import { Outlet, RouteObject, createBrowserRouter } from "react-router-dom";
-import { NotFound, StandardVigenerePage, AutoKeyVigenerePage, ExtendedVigenerePage, PlayfairPage } from "../pages";
+import { 
+    NotFound, 
+    StandardVigenerePage, 
+    AutoKeyVigenerePage, 
+    ExtendedVigenerePage, 
+    PlayfairPage,
+    AffinePage 
+} from "../pages";
 import { Navbar, Sidebar } from "@/components";
 
 const PageLayout = () => {
@@ -34,6 +41,10 @@ const routes: RouteObject[] = [
             {
                 path: "/playfair",
                 element: <PlayfairPage />,
+            },
+            {
+                path: "/affine",
+                element: <AffinePage />,
             },
             {
                 path: "*",

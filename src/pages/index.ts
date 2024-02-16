@@ -3,11 +3,13 @@ import StandardVigenerePage from "./StandardVigenere";
 import AutoKeyVigenerePage from "./AutoKeyVigenere";
 import ExtendedVigenerePage from "./ExtendedVigenere";
 import PlayfairPage from "./Playfair";
+import AffinePage from "./Affine";
 
 export {
   NotFound,
   StandardVigenerePage,
   AutoKeyVigenerePage,
   ExtendedVigenerePage,
-  PlayfairPage
+  PlayfairPage,
+  AffinePage
 };

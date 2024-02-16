@@ -8,6 +8,8 @@ import ExtendedVigenereText from "./ExtendedVigenereText";
 import ExtendedVigenereFile from "./ExtendedVigenereFile";
 import PlayfairText from "./PlayfairText";
 import PlayfairFile from "./PlayfairFile";
+import AffineText from "./AffineText";
+import AffineFile from "./AffineFile";
 
 export { 
     Sidebar, 
@@ -19,5 +21,7 @@ export {
     ExtendedVigenereText,
     ExtendedVigenereFile,
     PlayfairText,
-    PlayfairFile
+    PlayfairFile,
+    AffineText,
+    AffineFile
 };
