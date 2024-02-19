@@ -14,6 +14,16 @@ class TextProcessor {
     static toBase64(text: string) {
         return btoa(text);
     }
+
+    static toUint8Array(text: string) {
+        const textEncoder = new TextEncoder();
+        return textEncoder.encode(text);
+    }
+
+    static toStringFromUint8Array(array: Uint8Array) {
+        const textDecoder = new TextDecoder('utf-8');
+        return textDecoder.decode(array);
+    }
 }
 
 export default TextProcessor;

@@ -21,8 +21,8 @@ const FormSchema = z.object({
 
 const ExtendedVigenereFile: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
-    const [result, setResult] = useState("");
-    const [messageData, setMessageData] = useState<string>("");
+    const [result, setResult] = useState<Uint8Array>();
+    const [messageBuffer, setMessageBuffer] = useState<Uint8Array>();
     const [fileType, setFileType] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
 
@@ -36,13 +36,13 @@ const ExtendedVigenereFile: React.FC = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 if (e.target) {
-                    const res = e.target.result as string;
-                    setMessageData(res); // Update messageData with file content
+                    const res = new Uint8Array(e.target.result as ArrayBuffer); // Read as array buffer
+                    setMessageBuffer(res);
                     setFileType(file.type);
                     setFileName(file.name);
                 }
             };
-            reader.readAsText(file);
+            reader.readAsArrayBuffer(file);
     
             if (textRefFakultas.current) {
                 textRefFakultas.current.textContent = 'File uploaded successfully!';
@@ -50,8 +50,6 @@ const ExtendedVigenereFile: React.FC = () => {
             if (infoRefFakultas.current) {
                 infoRefFakultas.current.textContent = `${file.name}`;
             }
-        } else {
-            setMessageData(""); // Reset messageData if no file is selected
         }
     };    
 
@@ -67,8 +65,8 @@ const ExtendedVigenereFile: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: TextProcessor.cleanFormat(messageData),
-                key: TextProcessor.cleanFormat(data.key),
+                input: messageBuffer,
+                key: TextProcessor.toUint8Array(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -79,7 +77,7 @@ const ExtendedVigenereFile: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(TextProcessor.cleanFormat(messageData));
+            setResult(messageBuffer as Uint8Array);
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -89,12 +87,12 @@ const ExtendedVigenereFile: React.FC = () => {
 
     const handleDownload = () => {
         if (fileType !== "") {
-            const blob = new Blob([result], { type: fileType });
+            const blob = new Blob([result as Uint8Array], { type: fileType });
             const file = new File([blob], fileName, { type: fileType });
       
             FileProcessor.downloadFile(file, fileName);
         } else {
-            if (!FileProcessor.download(result, "Extended-vigenere-result.txt")) {
+            if (!FileProcessor.download(TextProcessor.toStringFromUint8Array(result as Uint8Array), "Extended-vigenere-result.txt")) {
                 alert("Download failed");
             }
         }
@@ -197,7 +195,7 @@ const ExtendedVigenereFile: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {TextProcessor.toStringFromUint8Array(result as Uint8Array)}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

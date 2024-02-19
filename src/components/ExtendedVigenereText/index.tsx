@@ -37,8 +37,8 @@ const ExtendedVigenereText: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: TextProcessor.cleanFormat(data.input),
-                key: TextProcessor.cleanFormat(data.key),
+                input: TextProcessor.toUint8Array(data.input),
+                key: TextProcessor.toUint8Array(data.key),
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -49,7 +49,7 @@ const ExtendedVigenereText: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(TextProcessor.cleanFormat(data.input));
+            setResult(TextProcessor.toStringFromUint8Array(payload.input));
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -146,7 +146,7 @@ const ExtendedVigenereText: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {result}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
