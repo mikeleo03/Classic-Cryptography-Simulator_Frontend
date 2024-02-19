@@ -7,7 +7,8 @@ import {
     PlayfairPage,
     AffinePage ,
     HillPage,
-    SuperEncryptionPage
+    SuperEncryptionPage,
+    EnigmaPage
 } from "../pages";
 import { Navbar, Sidebar } from "@/components";
 
@@ -55,6 +56,10 @@ const routes: RouteObject[] = [
             {
                 path: "/super",
                 element: <SuperEncryptionPage />,
+            },
+            {
+                path: "/enigma",
+                element: <EnigmaPage />,
             },
             {
                 path: "*",

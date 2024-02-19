@@ -6,6 +6,7 @@ import PlayfairPage from "./Playfair";
 import AffinePage from "./Affine";
 import HillPage from "./Hill";
 import SuperEncryptionPage from "./SuperEncryption";
+import EnigmaPage from "./Enigma";
 
 export {
   NotFound,
@@ -15,5 +16,6 @@ export {
   PlayfairPage,
   AffinePage,
   HillPage,
-  SuperEncryptionPage
+  SuperEncryptionPage,
+  EnigmaPage
 };

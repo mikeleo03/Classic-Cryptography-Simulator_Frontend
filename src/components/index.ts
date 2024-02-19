@@ -14,6 +14,8 @@ import HillText from "./HillText";
 import HillFile from "./HillFile";
 import SuperEncryptionText from "./SuperEncryptionText";
 import SuperEncryptionFile from "./SuperEncryptionFile";
+import EnigmaText from "./EnigmaText";
+import EnigmaFile from "./EnigmaFile";
 
 export { 
     Sidebar, 
@@ -32,4 +34,6 @@ export {
     HillFile,
     SuperEncryptionText,
     SuperEncryptionFile,
+    EnigmaText,
+    EnigmaFile
 };
