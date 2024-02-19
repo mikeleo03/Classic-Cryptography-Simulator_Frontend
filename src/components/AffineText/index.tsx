@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
+import { AffineRequest, AffineResponse } from "@/types";
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.string().min(1, {
@@ -40,23 +42,24 @@ const AffineText: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
+            const payload: AffineRequest = {
                 input: TextProcessor.cleanFormat(data.input),
                 slope: data.slope,
                 intercept: data.intercept,
-                encrypt: data.encrypt
+                encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
             console.log(payload);
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(TextProcessor.cleanFormat(data.input));
+            const submitResponse: AffineResponse = await CipherApi.affineCipher(payload);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.cleanFormat(submitResponse.output));
+            } else {
+                toast.error(submitResponse.output);
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }

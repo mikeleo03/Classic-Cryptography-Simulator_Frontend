@@ -9,6 +9,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
+import { EnigmaRequest, EnigmaResponse } from '@/types';
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.string().min(1, {
@@ -72,27 +74,28 @@ const EnigmaText: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
+            const payload: EnigmaRequest = {
                 input: TextProcessor.cleanFormat(data.input),
                 order1: data.order1,
                 order2: data.order2,
                 order3: data.order3,
-                init1: data.init1,
-                init2: data.init2,
-                init3: data.init3,
+                pos1: data.init1,
+                pos2: data.init2,
+                pos3: data.init3,
                 plugboard: data.plugboard
             };
             setOnUpdate(true);
             console.log(payload);
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(TextProcessor.cleanFormat(data.input));
+            const submitResponse: EnigmaResponse = await CipherApi.enigmaCipher(payload);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.cleanFormat(submitResponse.output));
+            } else {
+                toast.error(submitResponse.output);
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }

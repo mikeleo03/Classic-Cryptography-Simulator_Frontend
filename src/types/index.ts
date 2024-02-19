@@ -62,15 +62,15 @@ export type HillResponse = {
 
 // For Super Encryption
 export type SuperRequest = {
-    input: Uint8Array;
-    key1: Uint8Array;
+    input: number[];
+    key1: number[];
     key2: number;
     encrypt: boolean;
 }
 
 export type SuperResponse = {
     success: boolean;
-    output: Uint8Array;
+    output: string;
 }
 
 // For Enigma Cipher

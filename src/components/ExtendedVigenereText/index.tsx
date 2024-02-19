@@ -49,9 +49,17 @@ const ExtendedVigenereText: React.FC = () => {
             const submitResponse: ExtendedVigenereResponse = await CipherApi.extendedVigenereCipher(payload);
             console.log(submitResponse);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
-                setResult(TextProcessor.toStringFromUint8Array(TextProcessor.toUint8FromBase64(submitResponse.output)));
-            }
+                let res: Uint8Array = TextProcessor.toUint8FromBase64(submitResponse.output);
+                console.log(res);
+            
+                // Convert Uint8Array to string
+                let asciiString: string = "";
+                res.forEach(byte => {
+                    asciiString += String.fromCharCode(byte);
+                });
+            
+                setResult(asciiString);
+            }            
         } catch (error) {
             toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {

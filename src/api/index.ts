@@ -63,6 +63,46 @@ class CipherApi {
             throw error;
         }
     }
+
+    static async affineCipher(payload: AffineRequest): Promise<AffineResponse> {
+        try {
+            const response = await this.axios.post<AffineResponse>('/affine', JSON.stringify(payload));
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async hillCipher(payload: HillRequest): Promise<HillResponse> {
+        try {
+            const response = await this.axios.post<HillResponse>('/hill', JSON.stringify(payload));
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async superEncryption(payload: SuperRequest): Promise<SuperResponse> {
+        try {
+            const response = await this.axios.post<SuperResponse>('/super', JSON.stringify(payload));
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async enigmaCipher(payload: EnigmaRequest): Promise<EnigmaResponse> {
+        try {
+            const response = await this.axios.post<EnigmaResponse>('/enigma', JSON.stringify(payload));
+
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default CipherApi;

@@ -10,6 +10,8 @@ import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import UploadImage from "@/assets/images/upload.png";
+import { SuperRequest, SuperResponse } from '@/types';
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.any(),
@@ -68,23 +70,23 @@ const SuperEncryptionFile: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
-                input: messageBuffer,
-                key1: TextProcessor.toUint8Array(data.key1),
+            const payload: SuperRequest = {
+                input: Object.values(messageBuffer as Uint8Array),
+                key1: Object.values(TextProcessor.toUint8Array(data.key1)),
                 key2: data.key2,
-                encrypt: data.encrypt
+                encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
             console.log(payload);
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(messageBuffer as Uint8Array);
+            const submitResponse: SuperResponse = await CipherApi.superEncryption(payload);
+            console.log(submitResponse);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.toUint8FromBase64(submitResponse.output));
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }
