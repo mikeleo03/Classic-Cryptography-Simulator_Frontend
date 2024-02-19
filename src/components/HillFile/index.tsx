@@ -34,8 +34,8 @@ const HillFile: React.FC = () => {
         [0, 0],
     ]);
 
-    const textRefFakultas = useRef<HTMLParagraphElement>(null);
-    const infoRefFakultas = useRef<HTMLParagraphElement>(null);
+    const textRefFileInput = useRef<HTMLParagraphElement>(null);
+    const infoRefFileInput = useRef<HTMLParagraphElement>(null);
 
     const showFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -52,11 +52,11 @@ const HillFile: React.FC = () => {
             };
             reader.readAsText(file);
     
-            if (textRefFakultas.current) {
-                textRefFakultas.current.textContent = 'File uploaded successfully!';
+            if (textRefFileInput.current) {
+                textRefFileInput.current.textContent = 'File uploaded successfully!';
             }
-            if (infoRefFakultas.current) {
-                infoRefFakultas.current.textContent = `${file.name}`;
+            if (infoRefFileInput.current) {
+                infoRefFileInput.current.textContent = `${file.name}`;
             }
         } else {
             setMessageData(""); // Reset messageData if no file is selected
@@ -167,10 +167,10 @@ const HillFile: React.FC = () => {
                                             />
                                         </div>
                                         <div className='w-4/5'>
-                                            <p className="text-base font-bold text-center" ref={textRefFakultas}>
+                                            <p className="text-base font-bold text-center" ref={textRefFileInput}>
                                                 Please upload your input file here...
                                             </p>
-                                            <p className="text-sm font-normal text-center mt-1" ref={infoRefFakultas}>
+                                            <p className="text-sm font-normal text-center mt-1" ref={infoRefFileInput}>
                                                 You haven't uploaded any files, yet!
                                             </p>
                                         </div>

@@ -29,8 +29,8 @@ const SuperEncryptionFile: React.FC = () => {
     const [fileType, setFileType] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
 
-    const textRefFakultas = useRef<HTMLParagraphElement>(null);
-    const infoRefFakultas = useRef<HTMLParagraphElement>(null);
+    const textRefFileInput = useRef<HTMLParagraphElement>(null);
+    const infoRefFileInput = useRef<HTMLParagraphElement>(null);
 
     const showFile = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -47,11 +47,11 @@ const SuperEncryptionFile: React.FC = () => {
             };
             reader.readAsArrayBuffer(file);
     
-            if (textRefFakultas.current) {
-                textRefFakultas.current.textContent = 'File uploaded successfully!';
+            if (textRefFileInput.current) {
+                textRefFileInput.current.textContent = 'File uploaded successfully!';
             }
-            if (infoRefFakultas.current) {
-                infoRefFakultas.current.textContent = `${file.name}`;
+            if (infoRefFileInput.current) {
+                infoRefFileInput.current.textContent = `${file.name}`;
             }
         }
     };    
@@ -148,10 +148,10 @@ const SuperEncryptionFile: React.FC = () => {
                                             />
                                         </div>
                                         <div className='w-4/5'>
-                                            <p className="text-base font-bold text-center" ref={textRefFakultas}>
+                                            <p className="text-base font-bold text-center" ref={textRefFileInput}>
                                                 Please upload your input file here...
                                             </p>
-                                            <p className="text-sm font-normal text-center mt-1" ref={infoRefFakultas}>
+                                            <p className="text-sm font-normal text-center mt-1" ref={infoRefFileInput}>
                                                 You haven't uploaded any files, yet!
                                             </p>
                                         </div>
