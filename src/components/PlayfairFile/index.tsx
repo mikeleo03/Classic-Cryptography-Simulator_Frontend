@@ -10,6 +10,8 @@ import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import UploadImage from "@/assets/images/upload.png";
+import { PlayfairRequest, PlayfairResponse } from '@/types';
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.any(),
@@ -66,22 +68,21 @@ const PlayfairFile: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
+            const payload: PlayfairRequest = {
                 input: TextProcessor.cleanFormat(messageData),
                 keyword: TextProcessor.cleanFormat(data.key),
-                encrypt: data.encrypt
+                encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
             console.log(payload);
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(TextProcessor.cleanFormat(messageData));
+            const submitResponse: PlayfairResponse = await CipherApi.playfairCipher(payload);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.cleanFormat(submitResponse.output));
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }
@@ -197,7 +198,7 @@ const PlayfairFile: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {result} -- HAS</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

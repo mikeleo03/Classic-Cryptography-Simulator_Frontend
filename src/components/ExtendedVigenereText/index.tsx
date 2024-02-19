@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
+import { ExtendedVigenereRequest, ExtendedVigenereResponse } from '@/types';
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.string().min(1, {
@@ -36,22 +38,22 @@ const ExtendedVigenereText: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
-                input: TextProcessor.toUint8Array(data.input),
-                key: TextProcessor.toUint8Array(data.key),
-                encrypt: data.encrypt
+            const payload: ExtendedVigenereRequest = {
+                input: Object.values(TextProcessor.toUint8Array(data.input)),
+                key: Object.values(TextProcessor.toUint8Array(data.key)),
+                encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
+            console.log(JSON.stringify(payload));
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(TextProcessor.toStringFromUint8Array(payload.input));
+            const submitResponse: ExtendedVigenereResponse = await CipherApi.extendedVigenereCipher(payload);
+            console.log(submitResponse);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.toStringFromUint8Array(TextProcessor.toUint8FromBase64(submitResponse.output)));
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }

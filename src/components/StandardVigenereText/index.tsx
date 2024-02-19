@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
+import { VigenereRequest, VigenereResponse } from "@/types";
+import CipherApi from '@/api';
 
 const FormSchema = z.object({
     input: z.string().min(1, {
@@ -36,22 +38,21 @@ const StandardVigenereText: React.FC = () => {
 
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
-            const payload = {
+            const payload: VigenereRequest = {
                 input: TextProcessor.cleanFormat(data.input),
                 key: TextProcessor.cleanFormat(data.key),
-                encrypt: data.encrypt
+                encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
             console.log(payload);
     
-            /* const submitResponse: SubmitResponse = await TaskApi.submitTasks(id as string, JSON.stringify(payload));
-    
-            if (submitResponse.status === 'OK') {
-                toast.success('Your submission has been successfully submitted!');
-            } */
-            setResult(TextProcessor.cleanFormat(data.input));
+            const submitResponse: VigenereResponse = await CipherApi.standardVigenereCipher(payload);
+            if (submitResponse.success) {
+                console.log(submitResponse.output);
+                setResult(TextProcessor.cleanFormat(submitResponse.output));
+            }
         } catch (error) {
-            toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
+            toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
         } finally {
             setOnUpdate(false);
         }
@@ -146,7 +147,7 @@ const StandardVigenereText: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {result} -- HAS</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
