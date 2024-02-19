@@ -13,16 +13,19 @@ import UploadImage from "@/assets/images/upload.png";
 
 const FormSchema = z.object({
     input: z.any(),
-    key: z.string().min(1, {
-        message: "Key is required and cannot be empty.",
+    key1: z.string().min(1, {
+        message: "Vigenère key is required and cannot be empty.",
+    }),
+    key2: z.number().nonnegative().min(1, {
+        message: "Transposition key must be a number greater than or equal to 1.",
     }),
     encrypt: z.boolean().default(true).optional(),
 });
 
 const SuperEncryptionFile: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
-    const [result, setResult] = useState("");
-    const [messageData, setMessageData] = useState<string>("");
+    const [result, setResult] = useState<Uint8Array>();
+    const [messageBuffer, setMessageBuffer] = useState<Uint8Array>();
     const [fileType, setFileType] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
 
@@ -36,13 +39,13 @@ const SuperEncryptionFile: React.FC = () => {
             const reader = new FileReader();
             reader.onload = (e) => {
                 if (e.target) {
-                    const res = e.target.result as string;
-                    setMessageData(res); // Update messageData with file content
+                    const res = new Uint8Array(e.target.result as ArrayBuffer); // Read as array buffer
+                    setMessageBuffer(res);
                     setFileType(file.type);
                     setFileName(file.name);
                 }
             };
-            reader.readAsText(file);
+            reader.readAsArrayBuffer(file);
     
             if (textRefFakultas.current) {
                 textRefFakultas.current.textContent = 'File uploaded successfully!';
@@ -50,8 +53,6 @@ const SuperEncryptionFile: React.FC = () => {
             if (infoRefFakultas.current) {
                 infoRefFakultas.current.textContent = `${file.name}`;
             }
-        } else {
-            setMessageData(""); // Reset messageData if no file is selected
         }
     };    
 
@@ -59,7 +60,8 @@ const SuperEncryptionFile: React.FC = () => {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             input: null as any,
-            key: "",
+            key1: "",
+            key2: 1,
             encrypt: true,
         },
     })
@@ -67,8 +69,9 @@ const SuperEncryptionFile: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: TextProcessor.cleanFormat(messageData),
-                key: TextProcessor.cleanFormat(data.key),
+                input: messageBuffer,
+                key1: TextProcessor.toUint8Array(data.key1),
+                key2: data.key2,
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -79,7 +82,7 @@ const SuperEncryptionFile: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(TextProcessor.cleanFormat(messageData));
+            setResult(messageBuffer as Uint8Array);
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -89,12 +92,12 @@ const SuperEncryptionFile: React.FC = () => {
 
     const handleDownload = () => {
         if (fileType !== "") {
-            const blob = new Blob([result], { type: fileType });
+            const blob = new Blob([result as Uint8Array], { type: fileType });
             const file = new File([blob], fileName, { type: fileType });
       
             FileProcessor.downloadFile(file, fileName);
         } else {
-            if (!FileProcessor.download(result, "Super-encryption-result.txt")) {
+            if (!FileProcessor.download(TextProcessor.toStringFromUint8Array(result as Uint8Array), "Extended-vigenere-result.txt")) {
                 alert("Download failed");
             }
         }
@@ -161,19 +164,34 @@ const SuperEncryptionFile: React.FC = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="key"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-xl font-bold mb-1">Key</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <div className="flex w-full space-x-5">
+                        <FormField
+                            control={form.control}
+                            name="key1"
+                            render={({ field }) => (
+                                <FormItem className='w-3/4'>
+                                    <FormLabel className="text-xl font-bold mb-1">Vigenère Key</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="key2"
+                            render={({ field }) => (
+                                <FormItem className='w-1/4'>
+                                    <FormLabel className="text-xl font-bold mb-1">Transposition Key</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="insert the key here" {...field} className="md:text-sm text-base" onChange={e => field.onChange(parseInt(e.target.value))} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <Button type="submit" className="mt-5 md:text-sm text-base" disabled={onUpdate}>
                         {onUpdate ? (
                             <>
@@ -197,7 +215,7 @@ const SuperEncryptionFile: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {TextProcessor.toStringFromUint8Array(result as Uint8Array)}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

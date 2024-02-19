@@ -15,8 +15,11 @@ const FormSchema = z.object({
     input: z.string().min(1, {
         message: "Plain text is required and cannot be empty.",
     }),
-    key: z.string().min(1, {
-        message: "Key is required and cannot be empty.",
+    key1: z.string().min(1, {
+        message: "Vigenère key is required and cannot be empty.",
+    }),
+    key2: z.number().nonnegative().min(1, {
+        message: "Transposition key must be a number greater than or equal to 1.",
     }),
     encrypt: z.boolean().default(true).optional(),
 });
@@ -29,7 +32,8 @@ const SuperEncryptionText: React.FC = () => {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             input: "",
-            key: "",
+            key1: "",
+            key2: 1,
             encrypt: true,
         },
     })
@@ -37,8 +41,9 @@ const SuperEncryptionText: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload = {
-                input: TextProcessor.cleanFormat(data.input),
-                key: TextProcessor.cleanFormat(data.key),
+                input: TextProcessor.toUint8Array(data.input),
+                key1: TextProcessor.toUint8Array(data.key1),
+                key2: data.key2,
                 encrypt: data.encrypt
             };
             setOnUpdate(true);
@@ -49,7 +54,7 @@ const SuperEncryptionText: React.FC = () => {
             if (submitResponse.status === 'OK') {
                 toast.success('Your submission has been successfully submitted!');
             } */
-            setResult(TextProcessor.cleanFormat(data.input));
+            setResult(TextProcessor.toStringFromUint8Array(payload.input));
         } catch (error) {
             toast.error((error as any)?.response?.data?.description || 'Server is unreachable. Please try again later.');
         } finally {
@@ -110,19 +115,34 @@ const SuperEncryptionText: React.FC = () => {
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="key"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="text-xl font-bold mb-1">Key</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <div className="flex w-full space-x-5">
+                        <FormField
+                            control={form.control}
+                            name="key1"
+                            render={({ field }) => (
+                                <FormItem className='w-3/4'>
+                                    <FormLabel className="text-xl font-bold mb-1">Vigenère Key</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="insert the key here" {...field} className="md:text-sm text-base" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="key2"
+                            render={({ field }) => (
+                                <FormItem className='w-1/4'>
+                                    <FormLabel className="text-xl font-bold mb-1">Transposition Key</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" placeholder="insert the key here" {...field} className="md:text-sm text-base" onChange={e => field.onChange(parseInt(e.target.value))} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
                     <Button type="submit" className="mt-5 md:text-sm text-base" disabled={onUpdate}>
                         {onUpdate ? (
                             <>
@@ -146,7 +166,7 @@ const SuperEncryptionText: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toBase64(result)}</div>
+                    {result}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
