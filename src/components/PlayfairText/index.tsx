@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import { PlayfairRequest, PlayfairResponse } from '@/types';
+import PlayfairMatrix from '../PlayfairMatrix';
 import CipherApi from '@/api';
 
 const FormSchema = z.object({
@@ -26,6 +27,7 @@ const FormSchema = z.object({
 const PlayfairText: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
     const [result, setResult] = useState<string>("");
+    const [stringMatrix, setStringMatrix] = useState<string>("");
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -48,7 +50,8 @@ const PlayfairText: React.FC = () => {
     
             const submitResponse: PlayfairResponse = await CipherApi.playfairCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
+                console.log(submitResponse);
+                setStringMatrix(submitResponse.key);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             }
         } catch (error) {
@@ -146,8 +149,12 @@ const PlayfairText: React.FC = () => {
                     </div>}
                 </div>
                 {result ? 
-                    <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {result} -- HAS</div>
+                    <>
+                        <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
+                            {result} -- HAS
+                        </div>
+                        <PlayfairMatrix stringMatrix={stringMatrix} rows={5} cols={5} />
+                    </>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

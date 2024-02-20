@@ -11,6 +11,7 @@ import { FileProcessor, TextProcessor } from '@/utils';
 import { toast } from "react-toastify";
 import UploadImage from "@/assets/images/upload.png";
 import { PlayfairRequest, PlayfairResponse } from '@/types';
+import PlayfairMatrix from '../PlayfairMatrix';
 import CipherApi from '@/api';
 
 const FormSchema = z.object({
@@ -27,6 +28,7 @@ const PlayfairFile: React.FC = () => {
     const [messageData, setMessageData] = useState<string>("");
     const [fileType, setFileType] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
+    const [stringMatrix, setStringMatrix] = useState<string>("");
 
     const textRefFileInput = useRef<HTMLParagraphElement>(null);
     const infoRefFileInput = useRef<HTMLParagraphElement>(null);
@@ -78,7 +80,8 @@ const PlayfairFile: React.FC = () => {
     
             const submitResponse: PlayfairResponse = await CipherApi.playfairCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
+                console.log(submitResponse);
+                setStringMatrix(submitResponse.key);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             }
         } catch (error) {
@@ -197,8 +200,12 @@ const PlayfairFile: React.FC = () => {
                     </div>}
                 </div>
                 {result ? 
-                    <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {result} -- HAS</div>
+                    <>
+                        <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
+                            {result} -- HAS
+                        </div>
+                        <PlayfairMatrix stringMatrix={stringMatrix} rows={5} cols={5} />
+                    </>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
