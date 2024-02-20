@@ -36,6 +36,27 @@ class TextProcessor {
         const textDecoder = new TextDecoder('utf-8');
         return textDecoder.decode(array);
     }
+
+    static stringToArrayAscii(input: string): number[] {
+        const asciiArray: number[] = [];
+        
+        for (let i = 0; i < input.length; i++) {
+            const charIndex: number = i % input.length;
+            asciiArray.push(input.charCodeAt(charIndex));
+        }
+
+        return asciiArray;
+    }
+
+    static arrayAsciiToString(array: number[]): string {
+        let result: string = '';
+
+        array.forEach(code => {
+            result += String.fromCharCode(code);
+        });
+
+        return result;
+    }
 }
 
 export default TextProcessor;

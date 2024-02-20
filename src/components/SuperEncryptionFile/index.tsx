@@ -27,6 +27,7 @@ const FormSchema = z.object({
 const SuperEncryptionFile: React.FC = () => {
     const [onUpdate, setOnUpdate] = useState<boolean>(false);
     const [result, setResult] = useState<Uint8Array>();
+    const [resultShow, setResultShow] = useState<string>("");
     const [messageBuffer, setMessageBuffer] = useState<Uint8Array>();
     const [fileType, setFileType] = useState<string>("");
     const [fileName, setFileName] = useState<string>("");
@@ -83,7 +84,12 @@ const SuperEncryptionFile: React.FC = () => {
             console.log(submitResponse);
             if (submitResponse.success) {
                 console.log(submitResponse.output);
-                setResult(TextProcessor.toUint8FromBase64(submitResponse.output));
+                setResult(new Uint8Array(submitResponse.output));
+                if (submitResponse.output.length > 2000) {
+                    setResultShow("Please view the file instead");
+                } else {
+                    setResultShow(TextProcessor.arrayAsciiToString(submitResponse.output));
+                }
             }
         } catch (error) {
             toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
@@ -217,7 +223,7 @@ const SuperEncryptionFile: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {TextProcessor.toStringFromUint8Array(result as Uint8Array)}</div>
+                    {resultShow}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }

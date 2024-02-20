@@ -39,8 +39,8 @@ const ExtendedVigenereText: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload: ExtendedVigenereRequest = {
-                input: Object.values(TextProcessor.toUint8Array(data.input)),
-                key: Object.values(TextProcessor.toUint8Array(data.key)),
+                input: TextProcessor.stringToArrayAscii(data.input),
+                key: TextProcessor.stringToArrayAscii(data.key),
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
@@ -49,16 +49,7 @@ const ExtendedVigenereText: React.FC = () => {
             const submitResponse: ExtendedVigenereResponse = await CipherApi.extendedVigenereCipher(payload);
             console.log(submitResponse);
             if (submitResponse.success) {
-                let res: Uint8Array = TextProcessor.toUint8FromBase64(submitResponse.output);
-                console.log(res);
-            
-                // Convert Uint8Array to string
-                let asciiString: string = "";
-                res.forEach(byte => {
-                    asciiString += String.fromCharCode(byte);
-                });
-            
-                setResult(asciiString);
+                setResult(TextProcessor.arrayAsciiToString(submitResponse.output));
             }            
         } catch (error) {
             toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');

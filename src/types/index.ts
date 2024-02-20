@@ -19,7 +19,7 @@ export type ExtendedVigenereRequest = {
 
 export type ExtendedVigenereResponse = {
     success: boolean;
-    output: string;
+    output: number[];
 }
 
 // For Playfair Cipher
@@ -70,7 +70,7 @@ export type SuperRequest = {
 
 export type SuperResponse = {
     success: boolean;
-    output: string;
+    output: number[];
 }
 
 // For Enigma Cipher

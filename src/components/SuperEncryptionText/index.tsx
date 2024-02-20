@@ -43,8 +43,8 @@ const SuperEncryptionText: React.FC = () => {
     async function onSubmit(data: z.infer<typeof FormSchema>) {
         try {
             const payload: SuperRequest = {
-                input: Object.values(TextProcessor.toUint8Array(data.input)),
-                key1: Object.values(TextProcessor.toUint8Array(data.key1)),
+                input: TextProcessor.stringToArrayAscii(data.input),
+                key1: TextProcessor.stringToArrayAscii(data.key1),
                 key2: data.key2,
                 encrypt: data.encrypt as boolean
             };
@@ -54,8 +54,7 @@ const SuperEncryptionText: React.FC = () => {
             const submitResponse: SuperResponse = await CipherApi.superEncryption(payload);
             console.log(submitResponse);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
-                setResult(submitResponse.output);
+                setResult(TextProcessor.arrayAsciiToString(submitResponse.output));
             }
         } catch (error) {
             toast.error((error as any)?.message || 'Server is unreachable. Please try again later.');
