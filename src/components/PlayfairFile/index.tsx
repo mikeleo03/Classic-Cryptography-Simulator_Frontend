@@ -202,7 +202,7 @@ const PlayfairFile: React.FC = () => {
                 {result ? 
                     <>
                         <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                            {result} -- HAS
+                            {TextProcessor.toBase64(result)}
                         </div>
                         <PlayfairMatrix stringMatrix={stringMatrix} rows={5} cols={5} />
                     </>

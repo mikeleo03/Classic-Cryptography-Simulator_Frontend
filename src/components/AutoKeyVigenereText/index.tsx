@@ -147,7 +147,7 @@ const AutoKeyVigenereText: React.FC = () => {
                 </div>
                 {result ? 
                     <div className="mx-auto h-40 max-w-[70rem] overflow-y-auto break-words rounded-md border bg-background px-3 py-2 ring-offset-background md:text-sm text-base text-wrap">
-                    {result} -- HAS</div>
+                    {TextProcessor.toBase64(result)}</div>
                     : 
                     <div>Please fill the encyption/decription form above first</div>
                 }
