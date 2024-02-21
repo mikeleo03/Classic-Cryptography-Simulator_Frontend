@@ -85,11 +85,9 @@ const EnigmaText: React.FC = () => {
                 plugboard: data.plugboard
             };
             setOnUpdate(true);
-            console.log(payload);
     
             const submitResponse: EnigmaResponse = await CipherApi.enigmaCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             } else {
                 toast.error(submitResponse.output);

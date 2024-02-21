@@ -73,12 +73,9 @@ const ExtendedVigenereFile: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
 
             const submitResponse: ExtendedVigenereResponse = await CipherApi.extendedVigenereCipher(payload);
-            console.log(submitResponse);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
                 setResult(new Uint8Array(submitResponse.output));
                 if (submitResponse.output.length > 2000) {
                     setResultShow("Please view the file instead");

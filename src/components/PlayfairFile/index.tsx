@@ -76,11 +76,9 @@ const PlayfairFile: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
     
             const submitResponse: PlayfairResponse = await CipherApi.playfairCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse);
                 setStringMatrix(submitResponse.key);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             }

@@ -74,11 +74,9 @@ const AutoKeyVigenereFile: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
     
             const submitResponse: VigenereResponse = await CipherApi.autokeyVigenereCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             }
         } catch (error) {

@@ -44,10 +44,8 @@ const ExtendedVigenereText: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(JSON.stringify(payload));
     
             const submitResponse: ExtendedVigenereResponse = await CipherApi.extendedVigenereCipher(payload);
-            console.log(submitResponse);
             if (submitResponse.success) {
                 setResult(TextProcessor.arrayAsciiToString(submitResponse.output));
             }            

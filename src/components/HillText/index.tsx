@@ -66,11 +66,9 @@ const HillText: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
     
             const submitResponse: HillResponse = await CipherApi.hillCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             } else {
                 toast.error(submitResponse.output);

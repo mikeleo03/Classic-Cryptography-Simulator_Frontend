@@ -49,11 +49,9 @@ const AffineText: React.FC = () => {
                 encrypt: data.encrypt as boolean
             };
             setOnUpdate(true);
-            console.log(payload);
     
             const submitResponse: AffineResponse = await CipherApi.affineCipher(payload);
             if (submitResponse.success) {
-                console.log(submitResponse.output);
                 setResult(TextProcessor.cleanFormat(submitResponse.output));
             } else {
                 toast.error(submitResponse.output);
