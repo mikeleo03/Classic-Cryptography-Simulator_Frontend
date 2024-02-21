@@ -111,7 +111,8 @@ const Sidebar : React.FC = () => {
                 <div className='flex flex-row pl-2 items-center text-lg font-medium space-x-3 mt-5 mb-2'>
                     <a href='/' className='flex flex-row pl-5 items-center text-lg font-medium space-x-3'>
                         <div>
-                            <h1 className='text-xl font-bold'>Cryptography Simulation</h1>
+                            <h1 className='text-xl font-bold'>Cryptography</h1>
+                            <h1 className='text-xl font-bold'>Simulation</h1>
                         </div>
                     </a>
                 </div>
