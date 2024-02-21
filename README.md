@@ -81,7 +81,7 @@ This program is created to simulate some popular classic cryptography algorithms
 ```
 
 ## 🔣 &nbsp;Algorithms
-Algorithm implemented on backend side. Further explanation and implementation of Tarjans Algorithm stated on [this repository](https://github.com/GoDillonAudris512/Classic-Cryptography-Simulator-Backend)
+Algorithm implemented on backend side. Further implementation of various cipher algorithm stated on [this repository](https://github.com/GoDillonAudris512/Classic-Cryptography-Simulator-Backend)
 
 ## ⚙️ &nbsp;How to Compile and Run the Program
 Clone this repository from terminal with this command
@@ -94,7 +94,7 @@ Compile and download some required modules by running the following *command*
 $ npm install
 $ npm run dev
 ```
-If you do it correctly, the pogram should be running on localhost:3000. Don't forget to run the backend side also. Further explanation on how to run the backend development server stated on [this repository](https://github.com/mikeleo03/Classic-Cryptography-Simulator-Frontend.git)
+If you do it correctly, the pogram should be running on localhost:3000. Don't forget to run the backend side also. Further explanation on how to run the backend development server stated on [this repository](https://github.com/GoDillonAudris512/Classic-Cryptography-Simulator-Backend)
 
 ## Available Scripts
 In the project directory, you can run:
