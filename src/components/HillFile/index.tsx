@@ -180,7 +180,7 @@ const HillFile: React.FC = () => {
                                     </div>
                                 </FormLabel>
                                 <FormControl>
-                                    <Input type="file" onChange={showFile} className="hidden"/>
+                                    <Input type="file" accept=".txt" onChange={showFile} className="hidden"/>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
